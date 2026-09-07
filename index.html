@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宜蘭兩天一夜｜9/12–9/13 旅遊手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF3EF; --ink:#17332A; --muted:#5E736A; --line:#D3E0D8; --card:#FFFFFF;
+  --sea:#2C6E91; --boba:#7A5230; --sun:#E8B23A;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:0 0 64px}
+
+/* ---------- hero + map ---------- */
+.hero{padding:26px 20px 6px}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:30px;line-height:1.2;margin:0 0 6px;letter-spacing:.02em}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+.hero p b{color:var(--ink);font-weight:500}
+.legend{display:flex;gap:16px;align-items:center;font-size:12px;color:var(--muted);margin:10px 0 0}
+.legend i{display:inline-block;width:18px;border-top:3px dashed;vertical-align:middle;margin-right:5px}
+.legend .l1 i{border-color:var(--sea)} .legend .l2 i{border-color:var(--boba)}
+.legend button{margin-left:auto;background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font:12px var(--sans);color:var(--muted);cursor:pointer}
+.mapbox{margin:8px 12px 0;background:#CFE3EC;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.mapbox.hide{display:none}
+.mapbox svg{display:block;width:100%;height:auto;user-select:none}
+.route{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 5;opacity:.22;transition:opacity .25s}
+.route.on{opacity:1}
+.route.r1{stroke:var(--sea)} .route.r2{stroke:var(--boba)}
+.route.alt{stroke-width:2;stroke-dasharray:2 5}
+.pin{cursor:pointer}
+.pin circle{fill:var(--sea);stroke:#fff;stroke-width:2.5;transition:fill .2s,stroke .2s}
+.pin.p2 circle{fill:var(--boba)}
+.pin.opt circle{fill:#fff;stroke:var(--boba);stroke-dasharray:3 2}
+.pin.opt text{fill:var(--boba)}
+.pin.done circle{fill:var(--sun)}
+.pin.sel circle{stroke:var(--sun);stroke-width:4}
+.pin text{fill:#fff;font:700 11px var(--sans);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.lbl{font:500 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.geo{font:11px var(--sans);fill:#7E93A0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- tabs ---------- */
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 12px 8px;display:flex;gap:8px}
+.tab{flex:1;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 4px;font:500 14px/1.25 var(--sans);color:var(--muted);cursor:pointer}
+.tab small{display:block;font-size:11px;font-weight:400}
+.tab[aria-selected=true]{color:#fff;border-color:transparent}
+.tab.t1[aria-selected=true]{background:var(--sea)}
+.tab.t2[aria-selected=true]{background:var(--boba)}
+.tab.tm[aria-selected=true]{background:var(--ink)}
+.tab:focus-visible,.head:focus-visible,.pin:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* ---------- timeline ---------- */
+.panel{display:none;padding:4px 12px 0}
+.panel.on{display:block}
+.dayhead{font-family:var(--serif);font-size:19px;font-weight:600;margin:10px 4px 8px}
+.dayhead span{font-family:var(--sans);font-size:13px;color:var(--muted);margin-left:8px;font-weight:400}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:65px;top:16px;bottom:16px;border-left:2px dashed var(--line)}
+.stop{display:grid;grid-template-columns:44px 28px 1fr;column-gap:8px;margin:0 0 4px}
+.stop .t{font-size:13px;font-weight:500;color:var(--muted);text-align:right;padding-top:13px}
+.stop.now .t{color:var(--ink);font-weight:700}
+.stop.now .t::after{content:"現在";display:block;font-size:10px;font-weight:500;color:var(--sun)}
+.num{width:26px;height:26px;border-radius:50%;background:var(--sea);color:#fff;font:700 12px var(--sans);display:grid;place-items:center;justify-self:center;margin-top:12px;position:relative;z-index:1;border:2px solid var(--bg)}
+.p2 .num{background:var(--boba)}
+.opt .num{background:#fff;color:var(--boba);border:2px dashed var(--boba)}
+.stop.done .num{background:var(--sun);color:var(--ink);border-color:var(--bg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.opt .card{border-style:dashed;background:transparent}
+.head{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px 11px 14px;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.name{font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.3}
+.name small{display:block;font-family:var(--sans);font-size:12px;color:var(--muted);font-weight:400}
+.chev{margin-left:auto;flex:none;width:18px;height:18px;color:var(--muted);transition:transform .2s}
+.stop.open .chev{transform:rotate(180deg)}
+.body{display:none;padding:10px 14px 14px;border-top:1px solid var(--line)}
+.stop.open .body{display:block}
+.meta{font-size:13px;color:var(--muted);margin:0 0 6px;display:grid;gap:2px}
+.meta div{display:flex;gap:6px}
+.meta div span:first-child{flex:none}
+.tips{margin:6px 0 12px;padding-left:18px}
+.tips li{margin:4px 0}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-block;padding:6px 12px;border-radius:999px;border:1px solid var(--sea);color:var(--sea);text-decoration:none;font-size:13px;font-weight:500;background:#fff}
+.p2 .btn{border-color:var(--boba);color:var(--boba)}
+.chk{margin-left:auto;font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;cursor:pointer}
+.chk input{width:16px;height:16px;accent-color:var(--sun)}
+.leg{grid-column:3;font-size:12px;color:var(--muted);padding:2px 0 8px 14px}
+.leg::before{content:"↓ ";color:var(--line)}
+
+/* ---------- memo ---------- */
+.memo h2{font-family:var(--serif);font-size:17px;font-weight:600;margin:16px 4px 6px}
+.memo ul{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.memo li{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.memo li:first-child{border-top:0}
+.memo li label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;width:100%}
+.memo input{width:18px;height:18px;margin-top:3px;flex:none;accent-color:var(--sun)}
+.memo li.on{color:var(--muted);text-decoration:line-through}
+.memo p{font-size:13px;color:var(--muted);margin:8px 6px 0}
+.foot{font-size:12px;color:var(--muted);padding:26px 20px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>宜蘭・兩天一夜</h1>
+  <p><b>9/12（六）</b>12:00 宜蘭車站集合 → <b>9/13（日）</b>約 16:00 宜蘭車站解散</p>
+  <div class="legend">
+    <span class="l1"><i></i>週六路線</span>
+    <span class="l2"><i></i>週日路線</span>
+    <button type="button" id="mapToggle" aria-expanded="true">收合地圖</button>
+  </div>
+</header>
+
+<div class="mapbox" id="mapbox">
+<svg viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="宜蘭行程示意圖">
+  <!-- land -->
+  <path d="M0,0 L280,0 Q272,30 266,53 Q245,100 234,147 Q225,180 225,213 Q228,245 240,267 Q252,290 266,307 Q276,335 287,360 Q298,388 309,413 Q322,440 335,460 L0,460 Z" fill="#E4EDE4"/>
+  <!-- mountains -->
+  <path d="M0,0 L70,0 Q85,60 70,118 Q50,170 45,206 Q40,260 55,311 Q90,350 150,363 Q190,400 205,460 L0,460 Z" fill="#CFE0CF"/>
+  <path d="M0,0 L40,0 Q45,120 25,220 Q20,300 40,360 Q80,400 115,460 L0,460 Z" fill="#B9CEB9"/>
+  <!-- river 蘭陽溪 -->
+  <path d="M45,302 Q120,292 180,280 Q220,272 240,267" fill="none" stroke="#BFD6E2" stroke-width="3" stroke-linecap="round"/>
+  <!-- coast / sand -->
+  <path d="M280,0 Q272,30 266,53 Q245,100 234,147 Q225,180 225,213 Q228,245 240,267 Q252,290 266,307 Q276,335 287,360 Q298,388 309,413 Q322,440 335,460" fill="none" stroke="#EFE3C6" stroke-width="4"/>
+  <!-- 國道5 -->
+  <path d="M201,73 Q160,100 126,127 Q112,170 116,213 Q125,265 159,307 Q210,340 255,387" fill="none" stroke="#B7C4BE" stroke-width="2" stroke-dasharray="5 4"/>
+  <text class="geo" x="98" y="180" transform="rotate(-72 98 180)">國道5</text>
+  <!-- 龜山島 -->
+  <path d="M352,96 Q364,80 380,86 Q392,90 397,98 Z" fill="#9BB8A4"/>
+  <text class="geo" x="374" y="112" text-anchor="middle">龜山島</text>
+  <text class="geo" x="352" y="250" text-anchor="middle" style="writing-mode:vertical-rl;font-size:12px;letter-spacing:.3em">太平洋</text>
+  <text class="geo" x="20" y="24">雪山山脈</text>
+
+  <!-- routes -->
+  <path id="r1" class="route r1" d="M80,206 Q84,160 105,118 Q170,78 248,58 C200,120 100,220 103,311 Q170,335 225,352"/>
+  <path id="r2" class="route r2" d="M225,352 Q240,360 256,376 Q262,300 194,233 Q140,215 80,206"/>
+  <path id="r2alt" class="route r2 alt" d="M256,376 Q285,395 315,433"/>
+
+  <!-- pins -->
+  <g class="pin" data-pin="1" tabindex="0"><circle cx="80" cy="206" r="11"/><text x="80" y="206">1</text></g>
+  <text class="lbl" x="80" y="230" text-anchor="middle">宜蘭車站</text>
+  <g class="pin" data-pin="2" tabindex="0"><circle cx="105" cy="118" r="11"/><text x="105" y="118">2</text></g>
+  <text class="lbl" x="120" y="122">礁溪・柯氏蔥油餅</text>
+  <g class="pin" data-pin="3" tabindex="0"><circle cx="248" cy="58" r="11"/><text x="248" y="58">3</text></g>
+  <text class="lbl" x="262" y="62">烏石漁港</text>
+  <g class="pin" data-pin="4" tabindex="0"><circle cx="103" cy="311" r="11"/><text x="103" y="311">4</text></g>
+  <text class="lbl" x="118" y="315">羅東觀光夜市</text>
+  <g class="pin" data-pin="5" tabindex="0"><circle cx="225" cy="352" r="11"/><text x="225" y="352">5</text></g>
+  <text class="lbl" x="240" y="346">民宿・龍德里</text>
+  <g class="pin p2" data-pin="6" tabindex="0"><circle cx="256" cy="376" r="11"/><text x="256" y="376">6</text></g>
+  <text class="lbl" x="270" y="380">奇麗灣珍奶文化館</text>
+  <g class="pin p2 opt" data-pin="nfa" tabindex="0"><circle cx="315" cy="433" r="9"/><text x="315" y="433">+</text></g>
+  <text class="lbl" x="302" y="428" text-anchor="end">南方澳（可選）</text>
+  <g class="pin p2" data-pin="7" tabindex="0"><circle cx="194" cy="233" r="11"/><text x="194" y="233">7</text></g>
+  <text class="lbl" x="208" y="237">蘭陽動植物王國</text>
+</svg>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab t1" role="tab" data-day="1" aria-selected="true">週六 9/12<small>北上・夜市・入住</small></button>
+  <button class="tab t2" role="tab" data-day="2" aria-selected="false">週日 9/13<small>珍奶・動物・回程</small></button>
+  <button class="tab tm" role="tab" data-day="m" aria-selected="false">備忘<small>準備清單</small></button>
+</nav>
+
+<section class="panel on" id="panel-1" role="tabpanel">
+  <div class="dayhead">Day 1<span>礁溪 → 頭城 → 羅東 → 蘇澳</span></div>
+  <ol class="tl" id="tl-1"></ol>
+</section>
+<section class="panel p2" id="panel-2" role="tabpanel">
+  <div class="dayhead">Day 2<span>蘇澳 → 壯圍 → 宜蘭</span></div>
+  <ol class="tl" id="tl-2"></ol>
+</section>
+<section class="panel memo" id="panel-m" role="tabpanel">
+  <h2>出發前</h2><ul id="memo-before"></ul>
+  <h2>帶什麼</h2><ul id="memo-pack"></ul>
+  <h2>下雨的話</h2><ul id="memo-rain"></ul>
+  <p>手冊以自駕為主。若有人搭大眾運輸：礁溪、頭城可搭台鐵；壯圍與蘇澳的點建議共乘或計程車。</p>
+</section>
+
+<p class="foot">營業時間與價格為 2026 年 9 月整理的網路資料，出發前請再以店家公告為準。</p>
+</div>
+
+<script>
+const STOPS = [
+  {key:'a1',day:1,pin:1,time:'12:00',name:'宜蘭車站',sub:'集合',addr:'宜蘭市光復路1號',hours:'',q:'宜蘭車站',
+   tips:['站前對面就是幾米公園和「星空號」飛天火車，等人到齊可以先拍照。','接人建議在光復路站前短暫停靠，人齊就出發。'],
+   leg:'開車約 20 分・台9線往礁溪'},
+  {key:'a2',day:1,pin:2,time:'12:30',name:'柯氏蔥油餅',sub:'礁溪・午餐',addr:'礁溪鄉礁溪路四段128號',hours:'09:00–18:00（週三公休）',q:'柯氏蔥油餅 礁溪',
+   tips:['假日幾乎都要排隊（約 10–30 分），現炸現吃最好吃。','蔥油餅 45 元、加蛋 50 元；三種醬料：蒜蓉醬油、招牌甜辣、鹹辣椒，點餐時報號碼。','對面中華電信有收費停車場，路邊也有停車格。','一片吃不飽？礁溪路上小吃多；吃完可去湯圍溝溫泉公園免費泡腳（車程 3 分）。'],
+   leg:'開車約 15 分・台9線往頭城'},
+  {key:'a3',day:1,pin:3,time:'14:00',name:'烏石漁港',sub:'頭城・海邊放空',addr:'頭城鎮港口里（導航「烏石漁港」）',hours:'港區全天開放',q:'烏石漁港',
+   tips:['看龜山島、逛漁港，有現撈海鮮攤。','旁邊的蘭陽博物館建築超好拍，室內有冷氣（09:00–17:00，週三休，全票約 100 元）。','再往北 5 分鐘是外澳沙灘，可踩水、看衝浪。','9 月午後很曬，帶帽子和水。'],
+   leg:'開車約 40 分・國道5 頭城→羅東'},
+  {key:'a4',day:1,pin:4,time:'17:15',name:'羅東觀光夜市',sub:'晚餐',addr:'羅東鎮興東路與民權路口（中山公園旁）',hours:'15:00–24:00',q:'羅東觀光夜市',
+   tips:['18:00 後人潮爆滿，早點到比較好停車（中山公園地下停車場或周邊收費停車場）。','必吃：包心粉圓、當歸羊肉湯、三星蔥餅、龍鳳腿、卜肉、蔥油派。','帶現金，部分攤位可用 Line Pay。','順便幫民宿買宵夜、飲料和隔天早餐——龍德里附近店家少。'],
+   leg:'開車約 25 分・往蘇澳龍德里'},
+  {key:'a5',day:1,pin:5,time:'19:45',name:'民宿 1829 壹捌貳玖',sub:'龍德里・包棟入住',addr:'蘇澳鎮龍德里（正確地址以訂單為準）',hours:'',q:'宜蘭縣蘇澳鎮龍德里',
+   tips:['出發前先跟房東確認入住時間、鑰匙或密碼的取得方式。','導航直接輸入民宿提供的地址最準。','包棟好好玩：桌遊、聊天，隔天 10 點才出發不用早起。'],
+   leg:''},
+
+  {key:'b1',day:2,pin:5,time:'09:00',name:'民宿早餐・退房',sub:'龍德里',addr:'蘇澳鎮龍德里',hours:'',q:'宜蘭縣蘇澳鎮龍德里',
+   tips:['吃早餐、收東西，10 點前退房。','退房前檢查：充電線、盥洗用品、冰箱裡的東西。'],
+   leg:'開車約 5 分'},
+  {key:'b2',day:2,pin:6,time:'10:00',name:'奇麗灣珍奶文化館',sub:'蘇澳・免門票',addr:'蘇澳鎮頂寮里頂強路23號',hours:'10:00–17:00（免門票、免費停車）',q:'奇麗灣珍奶文化館',
+   tips:['燈泡珍奶必拍；2 樓珍奶故事館逛 30 分鐘左右。','手搖珍奶 DIY 有固定場次，建議先在 Klook／KKday 預約。','午餐可直接吃館內燈泡野菜餐廳（蔬食吧＋珍奶暢飲），或到南方澳吃海鮮。','伴手禮在這裡買最方便。'],
+   leg:'開車約 35 分・台2濱海公路往壯圍（去南方澳的話再加約 30 分）'},
+  {key:'b3',day:2,pin:'nfa',opt:true,time:'11:45',name:'南方澳',sub:'可選・海鮮午餐',addr:'蘇澳鎮南方澳（導航「南方澳漁港」）',hours:'',q:'南方澳漁港',
+   tips:['第一漁港旁海鮮餐廳多；豆腐岬、南天宮金媽祖、內埤海灘都在附近。','從奇麗灣約 10 分鐘，之後北上到壯圍約 40 分鐘。','想在動植物王國多待一點就跳過這站。'],
+   leg:'開車約 40 分・往壯圍'},
+  {key:'b4',day:2,pin:7,time:'13:30',name:'蘭陽動植物王國',sub:'壯圍・餵動物',addr:'壯圍鄉復興村紅葉路62-13號',hours:'假日 09:30–17:00（最後入園 16:30）',q:'蘭陽動植物王國',
+   tips:['建議停留 1.5–2 小時；動物 11:30–13:30 午休，下午到剛剛好。','門票約 280 元起，含搭船、飼料與抵用券；線上（Klook／KKday）先買較便宜，現場購票可能只收現金。','帶幾枚 50 元硬幣，扭蛋機買飼料餵動物。','室內＋室外園區，下雨也能玩。免費停車但假日車位少。'],
+   leg:'開車約 15 分・回宜蘭車站'},
+  {key:'b5',day:2,pin:1,time:'16:00',name:'宜蘭車站',sub:'解散',addr:'宜蘭市光復路1號',hours:'',q:'宜蘭車站',
+   tips:['週日下午北上火車很滿，記得提早訂票。','想早點或晚點走，前一站的時間可以彈性調整。'],
+   leg:''}
+];
+
+const MEMO = {
+  before:['訂好週日北返火車票（16:30–18:30 宜蘭→台北的班次容易滿）','跟民宿確認入住／退房時間、鑰匙領取方式','預約奇麗灣珍奶 DIY 場次（Klook／KKday）','線上先買蘭陽動植物王國門票','出發前一天看氣象：9 月仍有颱風和午後雷陣雨'],
+  pack:['現金（蔥油餅、夜市、動物飼料 50 元硬幣）','防曬、帽子、水壺','防蚊液（壯圍、烏石港戶外）','換洗衣物、拖鞋、盥洗用品','行動電源','雨具'],
+  rain:['烏石港 → 改逛旁邊的蘭陽博物館（室內）','礁溪 → 改去泡湯：湯圍溝、礁溪溫泉公園森林風呂','動植物王國有大面積室內區，照常去','夜市 → 雨大就改羅東市區餐廳，宵夜外帶回民宿']
+};
+
+const state = {day:1, open:new Set(['a1']), done:new Set()};
+const gmaps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function stopHTML(s){
+  const cls = ['stop', s.opt?'opt':'', state.open.has(s.key)?'open':'', state.done.has(s.key)?'done':''].join(' ');
+  const meta = [
+    s.hours ? `<div><span>🕘</span><span>${esc(s.hours)}</span></div>` : '',
+    s.addr  ? `<div><span>📍</span><span>${esc(s.addr)}</span></div>` : ''
+  ].join('');
+  const tips = s.tips.map(t => `<li>${esc(t)}</li>`).join('');
+  const leg = s.leg ? `<li class="stop"><div class="leg" style="grid-column:3">${esc(s.leg)}</div></li>` : '';
+  return `<li class="${cls}" data-key="${s.key}">
+    <div class="t">${s.time}</div>
+    <div class="num">${s.pin==='nfa'?'+':s.pin}</div>
+    <div class="card">
+      <button class="head" type="button" aria-expanded="${state.open.has(s.key)}">
+        <span class="name">${esc(s.name)}<small>${esc(s.sub)}</small></span>
+        <svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+      </button>
+      <div class="body">
+        <div class="meta">${meta}</div>
+        <ul class="tips">${tips}</ul>
+        <div class="acts">
+          <a class="btn" href="${gmaps(s.q)}" target="_blank" rel="noopener">Google 地圖導航</a>
+          <label class="chk"><input type="checkbox" ${state.done.has(s.key)?'checked':''}>到了</label>
+        </div>
+      </div>
+    </div>
+  </li>${leg}`;
+}
+
+function renderDay(d){
+  document.getElementById('tl-'+d).innerHTML = STOPS.filter(s => s.day===d).map(stopHTML).join('');
+}
+function renderMemo(){
+  for (const k in MEMO){
+    document.getElementById('memo-'+k).innerHTML = MEMO[k].map((t,i) =>
+      `<li><label><input type="checkbox"><span>${esc(t)}</span></label></li>`).join('');
+  }
+}
+function syncPins(){
+  document.querySelectorAll('.pin').forEach(p => {
+    const id = p.dataset.pin;
+    const mine = STOPS.filter(s => String(s.pin)===id);
+    p.classList.toggle('done', mine.length>0 && mine.every(s => state.done.has(s.key)));
+    p.classList.toggle('sel', mine.some(s => state.open.has(s.key) && s.day===state.day));
+  });
+  document.getElementById('r1').classList.toggle('on', state.day===1);
+  document.getElementById('r2').classList.toggle('on', state.day===2);
+  document.getElementById('r2alt').classList.toggle('on', state.day===2);
+}
+function selectDay(d){
+  state.day = d;
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.day===String(d))));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id==='panel-'+d));
+  syncPins();
+}
+function toggleStop(key, force){
+  const has = state.open.has(key);
+  const want = force===undefined ? !has : force;
+  if (want) state.open.add(key); else state.open.delete(key);
+  const li = document.querySelector(`.stop[data-key="${key}"]`);
+  if (li){ li.classList.toggle('open', want); li.querySelector('.head').setAttribute('aria-expanded', String(want)); }
+  syncPins();
+}
+
+/* events */
+document.querySelector('.tabs').addEventListener('click', e => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  selectDay(t.dataset.day==='m' ? 'm' : Number(t.dataset.day));
+});
+document.querySelectorAll('.tl').forEach(tl => {
+  tl.addEventListener('click', e => {
+    const li = e.target.closest('.stop[data-key]'); if (!li) return;
+    if (e.target.closest('.head')) toggleStop(li.dataset.key);
+  });
+  tl.addEventListener('change', e => {
+    const li = e.target.closest('.stop[data-key]'); if (!li || !e.target.matches('.chk input')) return;
+    if (e.target.checked) state.done.add(li.dataset.key); else state.done.delete(li.dataset.key);
+    li.classList.toggle('done', e.target.checked);
+    syncPins();
+  });
+});
+document.querySelectorAll('.pin').forEach(p => {
+  const go = () => {
+    const id = p.dataset.pin;
+    const mine = STOPS.filter(s => String(s.pin)===id);
+    const s = mine.find(x => x.day===state.day) || mine[0]; if (!s) return;
+    if (state.day!==s.day) selectDay(s.day);
+    toggleStop(s.key, true);
+    const li = document.querySelector(`.stop[data-key="${s.key}"]`);
+    li && li.scrollIntoView({behavior:'smooth', block:'center'});
+  };
+  p.addEventListener('click', go);
+  p.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); go(); } });
+});
+document.getElementById('mapToggle').addEventListener('click', e => {
+  const box = document.getElementById('mapbox');
+  const hide = !box.classList.contains('hide');
+  box.classList.toggle('hide', hide);
+  e.currentTarget.textContent = hide ? '展開地圖' : '收合地圖';
+  e.currentTarget.setAttribute('aria-expanded', String(!hide));
+});
+document.querySelector('.memo').addEventListener('change', e => {
+  const li = e.target.closest('li'); if (li) li.classList.toggle('on', e.target.checked);
+});
+
+/* auto-jump to today's stop during the trip */
+function markNow(){
+  const n = new Date();
+  const key = `${n.getFullYear()}-${n.getMonth()+1}-${n.getDate()}`;
+  const day = {'2026-9-12':1, '2026-9-13':2}[key];
+  if (!day) return;
+  const mins = n.getHours()*60 + n.getMinutes();
+  const list = STOPS.filter(s => s.day===day && !s.opt);
+  let cur = null;
+  for (const s of list){ const [h,m] = s.time.split(':').map(Number); if (h*60+m <= mins) cur = s; }
+  if (!cur) return;
+  state.open.clear(); state.open.add(cur.key);
+  renderDay(day); selectDay(day);
+  const li = document.querySelector(`.stop[data-key="${cur.key}"]`);
+  if (li){ li.classList.add('now'); }
+}
+
+renderDay(1); renderDay(2); renderMemo(); selectDay(1); markNow();
+</script>
+</body>
+</html>
