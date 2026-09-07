@@ -32,7 +32,6 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 .route{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 5;opacity:.22;transition:opacity .25s}
 .route.on{opacity:1}
 .route.r1{stroke:var(--sea)} .route.r2{stroke:var(--boba)}
-.route.alt{stroke-width:2;stroke-dasharray:2 5}
 .pin{cursor:pointer}
 .pin circle{fill:var(--sea);stroke:#fff;stroke-width:2.5;transition:fill .2s,stroke .2s}
 .pin.p2 circle{fill:var(--boba)}
@@ -40,18 +39,19 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 .pin.opt text{fill:var(--boba)}
 .pin.done circle{fill:var(--sun)}
 .pin.sel circle{stroke:var(--sun);stroke-width:4}
-.pin text{fill:#fff;font:700 11px var(--sans);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.pin text{fill:#fff;font:700 10px var(--sans);text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .lbl{font:500 11px var(--sans);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none}
 .geo{font:11px var(--sans);fill:#7E93A0;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ---------- tabs ---------- */
-.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 12px 8px;display:flex;gap:8px}
-.tab{flex:1;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 4px;font:500 14px/1.25 var(--sans);color:var(--muted);cursor:pointer}
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 12px 8px;display:flex;gap:6px}
+.tab{flex:1;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 2px;font:500 14px/1.25 var(--sans);color:var(--muted);cursor:pointer;white-space:nowrap}
 .tab small{display:block;font-size:11px;font-weight:400}
 .tab[aria-selected=true]{color:#fff;border-color:transparent}
 .tab.t1[aria-selected=true]{background:var(--sea)}
 .tab.t2[aria-selected=true]{background:var(--boba)}
+.tab.te[aria-selected=true]{background:var(--sun);color:var(--ink)}
 .tab.tm[aria-selected=true]{background:var(--ink)}
 .tab:focus-visible,.head:focus-visible,.pin:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 
@@ -66,7 +66,7 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 .stop .t{font-size:13px;font-weight:500;color:var(--muted);text-align:right;padding-top:13px}
 .stop.now .t{color:var(--ink);font-weight:700}
 .stop.now .t::after{content:"現在";display:block;font-size:10px;font-weight:500;color:var(--sun)}
-.num{width:26px;height:26px;border-radius:50%;background:var(--sea);color:#fff;font:700 12px var(--sans);display:grid;place-items:center;justify-self:center;margin-top:12px;position:relative;z-index:1;border:2px solid var(--bg)}
+.num{width:26px;height:26px;border-radius:50%;background:var(--sea);color:#fff;font:700 11px var(--sans);display:grid;place-items:center;justify-self:center;margin-top:12px;position:relative;z-index:1;border:2px solid var(--bg)}
 .p2 .num{background:var(--boba)}
 .opt .num{background:#fff;color:var(--boba);border:2px dashed var(--boba)}
 .stop.done .num{background:var(--sun);color:var(--ink);border-color:var(--bg)}
@@ -92,8 +92,20 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 .leg{grid-column:3;font-size:12px;color:var(--muted);padding:2px 0 8px 14px}
 .leg::before{content:"↓ ";color:var(--line)}
 
+/* ---------- eats ---------- */
+.eats h2,.memo h2{font-family:var(--serif);font-size:17px;font-weight:600;margin:16px 4px 6px}
+.meals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.meal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:56px 1fr;gap:10px}
+.meal.alt{border-style:dashed;background:transparent}
+.meal .slot{font-size:12px;color:var(--muted);line-height:1.4;padding-top:2px}
+.meal .slot b{display:block;color:var(--ink);font-size:13px;font-weight:700}
+.meal h3{font-family:var(--serif);font-size:16px;font-weight:600;margin:0 0 2px;line-height:1.3}
+.meal .sub{font-size:12px;color:var(--muted);line-height:1.5}
+.meal p{margin:6px 0 8px;font-size:14px}
+.eats .btn{border-color:var(--ink);color:var(--ink)}
+.eats p.note{font-size:13px;color:var(--muted);margin:8px 6px 0}
+
 /* ---------- memo ---------- */
-.memo h2{font-family:var(--serif);font-size:17px;font-weight:600;margin:16px 4px 6px}
 .memo ul{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .memo li{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
 .memo li:first-child{border-top:0}
@@ -109,7 +121,7 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 
 <header class="hero">
   <h1>宜蘭・兩天一夜</h1>
-  <p><b>9/12（六）</b>12:00 宜蘭車站集合 → <b>9/13（日）</b>約 16:00 宜蘭車站解散</p>
+  <p><b>9/12（六）</b>10:00 宜蘭車站集合取車 → <b>9/13（日）</b>約 19:15 宜蘭車站還車解散</p>
   <div class="legend">
     <span class="l1"><i></i>週六路線</span>
     <span class="l2"><i></i>週日路線</span>
@@ -118,69 +130,82 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 </header>
 
 <div class="mapbox" id="mapbox">
-<svg viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="宜蘭行程示意圖">
-  <!-- land -->
-  <path d="M0,0 L280,0 Q272,30 266,53 Q245,100 234,147 Q225,180 225,213 Q228,245 240,267 Q252,290 266,307 Q276,335 287,360 Q298,388 309,413 Q322,440 335,460 L0,460 Z" fill="#E4EDE4"/>
-  <!-- mountains -->
-  <path d="M0,0 L70,0 Q85,60 70,118 Q50,170 45,206 Q40,260 55,311 Q90,350 150,363 Q190,400 205,460 L0,460 Z" fill="#CFE0CF"/>
-  <path d="M0,0 L40,0 Q45,120 25,220 Q20,300 40,360 Q80,400 115,460 L0,460 Z" fill="#B9CEB9"/>
-  <!-- river 蘭陽溪 -->
+<svg viewBox="0 0 400 475" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="宜蘭行程示意圖">
+  <path d="M0,0 L280,0 Q272,30 266,53 Q245,100 234,147 Q225,180 225,213 Q228,245 240,267 Q252,290 266,307 Q276,335 287,360 Q298,388 309,413 Q322,440 335,460 Q340,468 345,475 L0,475 Z" fill="#E4EDE4"/>
+  <path d="M0,0 L70,0 Q85,60 70,118 Q50,170 45,206 Q40,260 55,311 Q80,345 120,368 Q170,405 205,475 L0,475 Z" fill="#CFE0CF"/>
+  <path d="M0,0 L40,0 Q45,120 25,220 Q20,300 40,360 Q80,415 115,475 L0,475 Z" fill="#B9CEB9"/>
   <path d="M45,302 Q120,292 180,280 Q220,272 240,267" fill="none" stroke="#BFD6E2" stroke-width="3" stroke-linecap="round"/>
-  <!-- coast / sand -->
-  <path d="M280,0 Q272,30 266,53 Q245,100 234,147 Q225,180 225,213 Q228,245 240,267 Q252,290 266,307 Q276,335 287,360 Q298,388 309,413 Q322,440 335,460" fill="none" stroke="#EFE3C6" stroke-width="4"/>
-  <!-- 國道5 -->
+  <path d="M280,0 Q272,30 266,53 Q245,100 234,147 Q225,180 225,213 Q228,245 240,267 Q252,290 266,307 Q276,335 287,360 Q298,388 309,413 Q322,440 335,460 Q340,468 345,475" fill="none" stroke="#EFE3C6" stroke-width="4"/>
   <path d="M201,73 Q160,100 126,127 Q112,170 116,213 Q125,265 159,307 Q210,340 255,387" fill="none" stroke="#B7C4BE" stroke-width="2" stroke-dasharray="5 4"/>
   <text class="geo" x="98" y="180" transform="rotate(-72 98 180)">國道5</text>
-  <!-- 龜山島 -->
   <path d="M352,96 Q364,80 380,86 Q392,90 397,98 Z" fill="#9BB8A4"/>
   <text class="geo" x="374" y="112" text-anchor="middle">龜山島</text>
   <text class="geo" x="352" y="250" text-anchor="middle" style="writing-mode:vertical-rl;font-size:12px;letter-spacing:.3em">太平洋</text>
   <text class="geo" x="20" y="24">雪山山脈</text>
 
   <!-- routes -->
-  <path id="r1" class="route r1" d="M80,206 Q84,160 105,118 Q170,78 248,58 C200,120 100,220 103,311 Q170,335 225,352"/>
-  <path id="r2" class="route r2" d="M225,352 Q240,360 256,376 Q262,300 194,233 Q140,215 80,206"/>
-  <path id="r2alt" class="route r2 alt" d="M256,376 Q285,395 315,433"/>
+  <path id="r1" class="route r1" d="M80,206 Q84,160 105,118 Q160,120 218,78 L238,56 L262,40 C200,110 100,230 130,320 C170,370 250,385 300,408 L282,436 Q170,380 103,311"/>
+  <path id="r2" class="route r2" d="M282,436 L258,416 Q296,428 338,436 L312,452 Q230,400 144,362 Q85,300 62,222 Q60,150 134,99 Q100,150 80,206"/>
 
   <!-- pins -->
   <g class="pin" data-pin="1" tabindex="0"><circle cx="80" cy="206" r="11"/><text x="80" y="206">1</text></g>
-  <text class="lbl" x="80" y="230" text-anchor="middle">宜蘭車站</text>
+  <text class="lbl" x="94" y="199">宜蘭車站</text>
   <g class="pin" data-pin="2" tabindex="0"><circle cx="105" cy="118" r="11"/><text x="105" y="118">2</text></g>
-  <text class="lbl" x="120" y="122">礁溪・柯氏蔥油餅</text>
-  <g class="pin" data-pin="3" tabindex="0"><circle cx="248" cy="58" r="11"/><text x="248" y="58">3</text></g>
-  <text class="lbl" x="262" y="62">烏石漁港</text>
-  <g class="pin" data-pin="4" tabindex="0"><circle cx="103" cy="311" r="11"/><text x="103" y="311">4</text></g>
+  <text class="lbl" x="92" y="122" text-anchor="end">礁溪・柯氏蔥油餅</text>
+  <g class="pin" data-pin="3" tabindex="0"><circle cx="218" cy="78" r="10"/><text x="218" y="78">3</text></g>
+  <text class="lbl" x="206" y="82" text-anchor="end">阿宗芋冰城</text>
+  <g class="pin" data-pin="4" tabindex="0"><circle cx="238" cy="56" r="11"/><text x="238" y="56">4</text></g>
+  <text class="lbl" x="226" y="50" text-anchor="end">蘭陽博物館</text>
+  <g class="pin" data-pin="5" tabindex="0"><circle cx="262" cy="40" r="11"/><text x="262" y="40">5</text></g>
+  <text class="lbl" x="276" y="44">烏石港・外澳</text>
+  <g class="pin" data-pin="6" tabindex="0"><circle cx="300" cy="408" r="11"/><text x="300" y="408">6</text></g>
+  <text class="lbl" x="312" y="404">空氣島彈跳工廠</text>
+  <g class="pin" data-pin="7" tabindex="0"><circle cx="282" cy="436" r="11"/><text x="282" y="436">7</text></g>
+  <text class="lbl" x="270" y="452" text-anchor="end">民宿・福德路</text>
+  <g class="pin" data-pin="8" tabindex="0"><circle cx="103" cy="311" r="11"/><text x="103" y="311">8</text></g>
   <text class="lbl" x="118" y="315">羅東觀光夜市</text>
-  <g class="pin" data-pin="5" tabindex="0"><circle cx="225" cy="352" r="11"/><text x="225" y="352">5</text></g>
-  <text class="lbl" x="240" y="346">民宿・龍德里</text>
-  <g class="pin p2" data-pin="6" tabindex="0"><circle cx="256" cy="376" r="11"/><text x="256" y="376">6</text></g>
-  <text class="lbl" x="270" y="380">奇麗灣珍奶文化館</text>
-  <g class="pin p2 opt" data-pin="nfa" tabindex="0"><circle cx="315" cy="433" r="9"/><text x="315" y="433">+</text></g>
-  <text class="lbl" x="302" y="428" text-anchor="end">南方澳（可選）</text>
-  <g class="pin p2" data-pin="7" tabindex="0"><circle cx="194" cy="233" r="11"/><text x="194" y="233">7</text></g>
-  <text class="lbl" x="208" y="237">蘭陽動植物王國</text>
+  <g class="pin p2" data-pin="9" tabindex="0"><circle cx="258" cy="416" r="10"/><text x="258" y="416">9</text></g>
+  <text class="lbl" x="246" y="420" text-anchor="end">正好小籠包蘇澳店</text>
+  <g class="pin p2" data-pin="10" tabindex="0"><circle cx="338" cy="436" r="11"/><text x="338" y="436">10</text></g>
+  <text class="lbl" x="350" y="432">內埤海灘</text>
+  <g class="pin p2" data-pin="11" tabindex="0"><circle cx="312" cy="452" r="11"/><text x="312" y="452">11</text></g>
+  <text class="lbl" x="324" y="460">南方澳海鮮</text>
+  <g class="pin p2 opt" data-pin="taxi" tabindex="0"><circle cx="232" cy="392" r="9"/><text x="232" y="392">+</text></g>
+  <text class="lbl" x="220" y="396" text-anchor="end">計程車博物館</text>
+  <g class="pin p2" data-pin="12" tabindex="0"><circle cx="144" cy="362" r="11"/><text x="144" y="362">12</text></g>
+  <text class="lbl" x="132" y="376" text-anchor="end">冬山河生態綠舟</text>
+  <g class="pin p2" data-pin="13" tabindex="0"><circle cx="62" cy="222" r="10"/><text x="62" y="222">13</text></g>
+  <text class="lbl" x="74" y="238">奕順軒宜蘭店</text>
+  <g class="pin p2" data-pin="14" tabindex="0"><circle cx="134" cy="99" r="11"/><text x="134" y="99">14</text></g>
+  <text class="lbl" x="134" y="84" text-anchor="middle">甕窯雞礁溪總店</text>
 </svg>
 </div>
 
 <nav class="tabs" role="tablist">
-  <button class="tab t1" role="tab" data-day="1" aria-selected="true">週六 9/12<small>北上・夜市・入住</small></button>
-  <button class="tab t2" role="tab" data-day="2" aria-selected="false">週日 9/13<small>珍奶・動物・回程</small></button>
-  <button class="tab tm" role="tab" data-day="m" aria-selected="false">備忘<small>準備清單</small></button>
+  <button class="tab t1" role="tab" data-day="1" aria-selected="true">週六<small>9/12</small></button>
+  <button class="tab t2" role="tab" data-day="2" aria-selected="false">週日<small>9/13</small></button>
+  <button class="tab te" role="tab" data-day="e" aria-selected="false">吃什麼<small>三餐</small></button>
+  <button class="tab tm" role="tab" data-day="m" aria-selected="false">備忘<small>清單</small></button>
 </nav>
 
 <section class="panel on" id="panel-1" role="tabpanel">
-  <div class="dayhead">Day 1<span>礁溪 → 頭城 → 羅東 → 蘇澳</span></div>
+  <div class="dayhead">Day 1<span>宜蘭 → 礁溪 → 頭城 → 蘇澳 → 羅東</span></div>
   <ol class="tl" id="tl-1"></ol>
 </section>
 <section class="panel p2" id="panel-2" role="tabpanel">
-  <div class="dayhead">Day 2<span>蘇澳 → 壯圍 → 宜蘭</span></div>
+  <div class="dayhead">Day 2<span>蘇澳 → 南方澳 → 冬山 → 宜蘭 → 礁溪</span></div>
   <ol class="tl" id="tl-2"></ol>
+</section>
+<section class="panel eats" id="panel-e" role="tabpanel">
+  <h2>週六</h2><ul class="meals" id="meals-1"></ul>
+  <h2>週日</h2><ul class="meals" id="meals-2"></ul>
+  <p class="note">價格是網路整理的大概數字。虛線框是二選一或備案。</p>
 </section>
 <section class="panel memo" id="panel-m" role="tabpanel">
   <h2>出發前</h2><ul id="memo-before"></ul>
   <h2>帶什麼</h2><ul id="memo-pack"></ul>
-  <h2>下雨的話</h2><ul id="memo-rain"></ul>
-  <p>手冊以自駕為主。若有人搭大眾運輸：礁溪、頭城可搭台鐵；壯圍與蘇澳的點建議共乘或計程車。</p>
+  <h2>下雨或太熱</h2><ul id="memo-rain"></ul>
+  <p>全程自駕。車程是假日估計，塞車再加 10–15 分。</p>
 </section>
 
 <p class="foot">營業時間與價格為 2026 年 9 月整理的網路資料，出發前請再以店家公告為準。</p>
@@ -188,48 +213,99 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 
 <script>
 const STOPS = [
-  {key:'a1',day:1,pin:1,time:'12:00',name:'宜蘭車站',sub:'集合',addr:'宜蘭市光復路1號',hours:'',q:'宜蘭車站',
-   tips:['站前對面就是幾米公園和「星空號」飛天火車，等人到齊可以先拍照。','接人建議在光復路站前短暫停靠，人齊就出發。'],
+  {key:'a1',day:1,pin:1,time:'10:00',name:'宜蘭車站',sub:'集合・取車',addr:'宜蘭市光復路1號',hours:'',q:'宜蘭車站',
+   tips:['站前對面就是幾米廣場，人到齊先拍大合照。','租車取車流程約 30 分，先派兩個人去辦，其他人拍照。','出發前導航設「柯氏蔥油餅」。'],
    leg:'開車約 20 分・台9線往礁溪'},
-  {key:'a2',day:1,pin:2,time:'12:30',name:'柯氏蔥油餅',sub:'礁溪・午餐',addr:'礁溪鄉礁溪路四段128號',hours:'09:00–18:00（週三公休）',q:'柯氏蔥油餅 礁溪',
-   tips:['假日幾乎都要排隊（約 10–30 分），現炸現吃最好吃。','蔥油餅 45 元、加蛋 50 元；三種醬料：蒜蓉醬油、招牌甜辣、鹹辣椒，點餐時報號碼。','對面中華電信有收費停車場，路邊也有停車格。','一片吃不飽？礁溪路上小吃多；吃完可去湯圍溝溫泉公園免費泡腳（車程 3 分）。'],
-   leg:'開車約 15 分・台9線往頭城'},
-  {key:'a3',day:1,pin:3,time:'14:00',name:'烏石漁港',sub:'頭城・海邊放空',addr:'頭城鎮港口里（導航「烏石漁港」）',hours:'港區全天開放',q:'烏石漁港',
-   tips:['看龜山島、逛漁港，有現撈海鮮攤。','旁邊的蘭陽博物館建築超好拍，室內有冷氣（09:00–17:00，週三休，全票約 100 元）。','再往北 5 分鐘是外澳沙灘，可踩水、看衝浪。','9 月午後很曬，帶帽子和水。'],
-   leg:'開車約 40 分・國道5 頭城→羅東'},
-  {key:'a4',day:1,pin:4,time:'17:15',name:'羅東觀光夜市',sub:'晚餐',addr:'羅東鎮興東路與民權路口（中山公園旁）',hours:'15:00–24:00',q:'羅東觀光夜市',
-   tips:['18:00 後人潮爆滿，早點到比較好停車（中山公園地下停車場或周邊收費停車場）。','必吃：包心粉圓、當歸羊肉湯、三星蔥餅、龍鳳腿、卜肉、蔥油派。','帶現金，部分攤位可用 Line Pay。','順便幫民宿買宵夜、飲料和隔天早餐——龍德里附近店家少。'],
-   leg:'開車約 25 分・往蘇澳龍德里'},
-  {key:'a5',day:1,pin:5,time:'19:45',name:'民宿 1829 壹捌貳玖',sub:'龍德里・包棟入住',addr:'蘇澳鎮龍德里（正確地址以訂單為準）',hours:'',q:'宜蘭縣蘇澳鎮龍德里',
-   tips:['出發前先跟房東確認入住時間、鑰匙或密碼的取得方式。','導航直接輸入民宿提供的地址最準。','包棟好好玩：桌遊、聊天，隔天 10 點才出發不用早起。'],
+  {key:'a2',day:1,pin:2,time:'11:00',name:'柯氏蔥油餅',sub:'礁溪・早午餐',addr:'礁溪鄉礁溪路四段128號',hours:'09:00–18:00（週三公休）',q:'柯氏蔥油餅 礁溪',
+   tips:['柯氏在礁溪，正好在往頭城的路上；頭城老街的阿丹蔥油餅也行，但要多繞一點。','炸蛋蔥油餅 45 元、加蛋 50 元，假日排 10–30 分，三種醬報號碼。','對面中華電信有收費停車場，路邊也有格子。'],
+   leg:'開車約 15 分・青雲路往頭城'},
+  {key:'a3',day:1,pin:3,time:'11:45',name:'阿宗芋冰城',sub:'頭城・吃冰',addr:'頭城鎮青雲路三段267號',hours:'09:00–21:00',q:'阿宗芋冰城 頭城',
+   tips:['頭城老字號古早味芋冰、花生冰，一球十幾元，外帶邊走邊吃。','跟蘭陽博物館同一條青雲路，再開 5 分鐘就到。'],
+   leg:'開車約 5 分'},
+  {key:'a4',day:1,pin:4,time:'12:15',name:'蘭陽博物館',sub:'頭城・拍建築',addr:'頭城鎮青雲路三段750號',hours:'09:00–17:00（週三公休）全票 100 元',q:'蘭陽博物館',
+   tips:['單面山造型和水池倒影在館外就拍得到，不進館不用錢。','進館看常設展約 1–1.5 小時，有冷氣、免費置物櫃。','趕時間就只拍外觀 20 分鐘，省下 1 小時給海邊。'],
+   leg:'開車約 5 分・就在隔壁'},
+  {key:'a5',day:1,pin:5,time:'13:45',name:'烏石港・外澳沙灘',sub:'頭城・午餐＋下午茶',addr:'九號咖啡外澳館：頭城鎮濱海路二段6號',hours:'九號咖啡 09:00–17:20',q:'九號咖啡外澳館',
+   tips:['先逛烏石港漁市場、看龜山島，港邊有海鮮小吃。','九號咖啡外澳館正對外澳沙灘，餐點加飲料當午餐兼下午茶，一人一杯低消，靠窗位要早點去。','外澳沙灘踏浪、看衝浪、拍海景，帶拖鞋和換洗衣物。','16:00 前上車，往蘇澳要開 50 分鐘。'],
+   leg:'開車約 50 分・國道5 頭城→蘇澳'},
+  {key:'a6',day:1,pin:6,time:'17:00',name:'空氣島彈跳工廠',sub:'蘇澳・室內放電 2 小時',addr:'蘇澳鎮港區路8號',hours:'10:00–20:00',q:'空氣島彈跳工廠',
+   tips:['2 小時票約 350 元／人，一票玩到底，含自助吧（油飯、米粉湯、涼麵、冰淇淋、飲料吃到飽），先當晚餐前菜。','彈跳床、魔鬼滑梯、泡泡足球、空氣碰碰車、水彈槍、40 多台免投幣遊戲機。','假日建議先電話預約 03-997-2222，10 人以上可以問團體票。','穿運動服、帶襪子，進場要簽安全同意書；一進場先到 2 樓拿水彈槍預約券。'],
+   leg:'開車約 5 分'},
+  {key:'a7',day:1,pin:7,time:'19:15',name:'民宿 1829 壹捌貳玖',sub:'蘇澳鎮福德路・入住',addr:'蘇澳鎮福德路（正確地址以訂單為準）',hours:'',q:'宜蘭縣蘇澳鎮福德路',
+   tips:['分房、放行李、沖個澡再出門。','出發前跟房東確認鑰匙或密碼的取得方式。','22:00 後蘇澳附近店都關了，宵夜、啤酒在羅東買齊再回來。'],
+   leg:'開車約 25 分・往羅東'},
+  {key:'a8',day:1,pin:8,time:'20:00',name:'羅東觀光夜市',sub:'晚餐・狂歡',addr:'羅東鎮興東路與民權路口（中山公園旁）',hours:'15:00–24:00',q:'羅東觀光夜市',
+   tips:['當歸羊肉湯、蔥肉串、龍鳳腿、包心粉圓、卜肉、三星蔥餅。','停中山公園地下停車場或周邊收費停車場，20:00 到人已經很多，有位就停。','帶現金，部分攤位可 Line Pay。','離開前把宵夜和飲料外帶好，羅東便利商店買啤酒。'],
+   leg:'開車約 25 分・回蘇澳'},
+  {key:'a9',day:1,pin:7,time:'22:15',name:'民宿 Party',sub:'宵夜、桌遊',addr:'蘇澳鎮福德路',hours:'',q:'宜蘭縣蘇澳鎮福德路',
+   tips:['包棟不用趕，隔天 09:30 才起床。','記得留一點宵夜的胃，明天早餐是小籠包。'],
    leg:''},
 
-  {key:'b1',day:2,pin:5,time:'09:00',name:'民宿早餐・退房',sub:'龍德里',addr:'蘇澳鎮龍德里',hours:'',q:'宜蘭縣蘇澳鎮龍德里',
-   tips:['吃早餐、收東西，10 點前退房。','退房前檢查：充電線、盥洗用品、冰箱裡的東西。'],
+  {key:'b1',day:2,pin:7,time:'09:30',name:'民宿起床・退房',sub:'蘇澳',addr:'蘇澳鎮福德路',hours:'',q:'宜蘭縣蘇澳鎮福德路',
+   tips:['收東西、退房，檢查充電線和冰箱。','早餐就在蘇澳市區，開 3 分鐘。'],
+   leg:'開車約 3 分'},
+  {key:'b2',day:2,pin:9,time:'09:45',name:'正好鮮肉小籠包 蘇澳店',sub:'早餐',addr:'蘇澳鎮太平路21號',hours:'08:00–15:30（週二公休）',q:'正好鮮肉小籠包 蘇澳店',
+   tips:['原本排在週日晚上吃宜蘭市的正好，改到蘇澳店當早餐，晚上就空出來吃甕窯雞。','一籠約 100 元，配酸辣湯、豆漿。'],
+   leg:'開車約 10 分・往南方澳'},
+  {key:'b3',day:2,pin:10,time:'10:30',name:'內埤海灘（情人灣）',sub:'南方澳・看海散步',addr:'蘇澳鎮南方澳內埤路（導航「內埤海灘」）',hours:'全天',q:'內埤海灘',
+   tips:['弧形礫石灘、海很藍，早上還不熱，拍照最好看。','這裡有暗流，浪大不要下水，踩踩就好。','旁邊豆腐岬可以一起走，30–45 分鐘足夠。','下雨或太曬就改去計程車博物館（往回開 15 分）。'],
    leg:'開車約 5 分'},
-  {key:'b2',day:2,pin:6,time:'10:00',name:'奇麗灣珍奶文化館',sub:'蘇澳・免門票',addr:'蘇澳鎮頂寮里頂強路23號',hours:'10:00–17:00（免門票、免費停車）',q:'奇麗灣珍奶文化館',
-   tips:['燈泡珍奶必拍；2 樓珍奶故事館逛 30 分鐘左右。','手搖珍奶 DIY 有固定場次，建議先在 Klook／KKday 預約。','午餐可直接吃館內燈泡野菜餐廳（蔬食吧＋珍奶暢飲），或到南方澳吃海鮮。','伴手禮在這裡買最方便。'],
-   leg:'開車約 35 分・台2濱海公路往壯圍（去南方澳的話再加約 30 分）'},
-  {key:'b3',day:2,pin:'nfa',opt:true,time:'11:45',name:'南方澳',sub:'可選・海鮮午餐',addr:'蘇澳鎮南方澳（導航「南方澳漁港」）',hours:'',q:'南方澳漁港',
-   tips:['第一漁港旁海鮮餐廳多；豆腐岬、南天宮金媽祖、內埤海灘都在附近。','從奇麗灣約 10 分鐘，之後北上到壯圍約 40 分鐘。','想在動植物王國多待一點就跳過這站。'],
-   leg:'開車約 40 分・往壯圍'},
-  {key:'b4',day:2,pin:7,time:'13:30',name:'蘭陽動植物王國',sub:'壯圍・餵動物',addr:'壯圍鄉復興村紅葉路62-13號',hours:'假日 09:30–17:00（最後入園 16:30）',q:'蘭陽動植物王國',
-   tips:['建議停留 1.5–2 小時；動物 11:30–13:30 午休，下午到剛剛好。','門票約 280 元起，含搭船、飼料與抵用券；線上（Klook／KKday）先買較便宜，現場購票可能只收現金。','帶幾枚 50 元硬幣，扭蛋機買飼料餵動物。','室內＋室外園區，下雨也能玩。免費停車但假日車位少。'],
-   leg:'開車約 15 分・回宜蘭車站'},
-  {key:'b5',day:2,pin:1,time:'16:00',name:'宜蘭車站',sub:'解散',addr:'宜蘭市光復路1號',hours:'',q:'宜蘭車站',
-   tips:['週日下午北上火車很滿，記得提早訂票。','想早點或晚點走，前一站的時間可以彈性調整。'],
+  {key:'b4',day:2,pin:11,time:'11:30',name:'南方澳海鮮午餐',sub:'阿芬鮮魚湯／富美活海鮮',addr:'蘇澳鎮海邊路145號／111號',hours:'阿芬 10:00–19:00；富美活 11:00–19:30（週三休）',q:'阿芬鮮魚湯 南方澳',
+   tips:['兩間都在海邊路上，隔幾間；11:30 先到比較不用等，12:30 後觀光客大量湧入。','阿芬是平價小吃路線：鮮魚湯、海產粥百元有找。富美活是點菜熱炒，人多想吃多樣選這間。','南天宮金媽祖就在旁邊，吃完可以看一下。'],
+   leg:'開車約 30 分・往冬山（繞計程車博物館多 15 分）'},
+  {key:'b5',day:2,pin:'taxi',opt:true,time:'13:00',name:'計程車博物館',sub:'可選・復古拍照',addr:'蘇澳鎮中山路二段162巷2號',hours:'10:00–17:00，門票 200 元',q:'計程車博物館 蘇澳',
+   tips:['全球唯一，老計程車和復古收藏品，1 小時逛完。','門票含碰碰車一次和一份餐飲兌換。','就在蘇澳交流道旁，往冬山順路；下雨或太熱的備案。'],
+   leg:'開車約 20 分・往冬山'},
+  {key:'b6',day:2,pin:12,time:'13:45',name:'冬山河生態綠舟',sub:'冬山・水道拍照',addr:'冬山鄉冬山路二段172號',hours:'08:00–18:00，免費入園',q:'冬山河生態綠舟',
+   tips:['大碗公和神祕水道要搭電動船（付費），假日場次先到服務台問。','園區大、樹蔭少，下午很曬，帶水和帽子。','停留 1–1.5 小時，15:30 前離開。'],
+   leg:'開車約 25 分・往宜蘭市'},
+  {key:'b7',day:2,pin:13,time:'15:45',name:'奕順軒 宜蘭店',sub:'伴手禮',addr:'宜蘭市神農路二段17號',hours:'09:30–21:30',q:'奕順軒 宜蘭店',
+   tips:['奶凍捲、蔥燒餅、三星蔥麵包。','離車站 5 分鐘，先買好放車上，還車時不用再繞。','想歇腳，附近咖啡廳多，喝一杯再往礁溪。'],
+   leg:'開車約 20 分・台9線往礁溪'},
+  {key:'b8',day:2,pin:14,time:'16:45',name:'甕窯雞 礁溪總店',sub:'晚餐',addr:'礁溪鄉礁溪路七段7之7號',hours:'假日 09:00–22:00',q:'甕窯雞 礁溪總店',
+   tips:['整隻甕窯雞約 700 元左右（以現場為準），戴手套手撕；配鍋巴飯、炒山蘇，4–6 人一隻雞加三、四道菜剛好。','假日晚餐時段會等位，17:00 前到最保險。','自有停車場，好停。','19:00 前吃完，回車站還車不用趕。'],
+   leg:'開車約 20 分・回宜蘭車站'},
+  {key:'b9',day:2,pin:1,time:'19:15',name:'宜蘭車站',sub:'還車・解散',addr:'宜蘭市光復路1號',hours:'',q:'宜蘭車站',
+   tips:['還車前先加滿油（租車通常要求滿油還車）。','週日晚上北上火車很滿，先訂票。','19:50 才還車也來得及，但別壓線。'],
    leg:''}
 ];
 
-const MEMO = {
-  before:['訂好週日北返火車票（16:30–18:30 宜蘭→台北的班次容易滿）','跟民宿確認入住／退房時間、鑰匙領取方式','預約奇麗灣珍奶 DIY 場次（Klook／KKday）','線上先買蘭陽動植物王國門票','出發前一天看氣象：9 月仍有颱風和午後雷陣雨'],
-  pack:['現金（蔥油餅、夜市、動物飼料 50 元硬幣）','防曬、帽子、水壺','防蚊液（壯圍、烏石港戶外）','換洗衣物、拖鞋、盥洗用品','行動電源','雨具'],
-  rain:['烏石港 → 改逛旁邊的蘭陽博物館（室內）','礁溪 → 改去泡湯：湯圍溝、礁溪溫泉公園森林風呂','動植物王國有大面積室內區，照常去','夜市 → 雨大就改羅東市區餐廳，宵夜外帶回民宿']
+const MEALS = {
+  1:[
+    {slot:'早午餐',time:'11:00',name:'柯氏蔥油餅',addr:'礁溪鄉礁溪路四段128號',hours:'09:00–18:00，週三休',
+     desc:'炸蛋蔥油餅 45 元、加蛋 50 元，現炸現吃。',q:'柯氏蔥油餅 礁溪'},
+    {slot:'冰',time:'11:45',name:'阿宗芋冰城',addr:'頭城鎮青雲路三段267號',hours:'09:00–21:00',
+     desc:'古早味芋冰一球十幾元，去蘭陽博物館順路。',q:'阿宗芋冰城 頭城'},
+    {slot:'午餐＋下午茶',time:'14:00',name:'九號咖啡外澳館',addr:'頭城鎮濱海路二段6號',hours:'09:00–17:20',
+     desc:'正對外澳沙灘的海景咖啡，有正餐（牛肉麵、披薩、炸物）和甜點，一人一杯低消，價位中等。',q:'九號咖啡外澳館'},
+    {slot:'晚餐①',time:'17:00',name:'空氣島自助吧',addr:'門票內含',hours:'隨門票 2 小時',
+     desc:'油飯、米粉湯、麻辣鴨血、涼麵、冰淇淋、飲料吃到飽，玩累了就吃。',q:'空氣島彈跳工廠'},
+    {slot:'晚餐②',time:'20:00',name:'羅東觀光夜市',addr:'羅東鎮興東路與民權路口',hours:'15:00–24:00',
+     desc:'當歸羊肉湯、蔥肉串、龍鳳腿、包心粉圓、卜肉，一人 200–300 元。宵夜順便外帶。',q:'羅東觀光夜市'}
+  ],
+  2:[
+    {slot:'早餐',time:'09:45',name:'正好鮮肉小籠包 蘇澳店',addr:'蘇澳鎮太平路21號',hours:'08:00–15:30，週二休',
+     desc:'民宿開 3 分鐘。一籠約 100 元，配酸辣湯、豆漿。',q:'正好鮮肉小籠包 蘇澳店'},
+    {slot:'午餐',time:'11:30',name:'阿芬鮮魚湯',addr:'蘇澳鎮海邊路145號',hours:'10:00–19:00',
+     desc:'南方澳平價小吃，鮮魚湯、海產粥百元有找，一人 150–250 元。',q:'阿芬鮮魚湯 南方澳'},
+    {slot:'午餐',name:'富美活海鮮',addr:'蘇澳鎮海邊路111號',hours:'11:00–19:30，週三休',alt:true,
+     desc:'二選一。點菜熱炒型，人多想吃多樣選這間，一人 300–400 元。',q:'富美活海鮮 南方澳'},
+    {slot:'伴手禮',time:'15:45',name:'奕順軒 宜蘭店',addr:'宜蘭市神農路二段17號',hours:'09:30–21:30',
+     desc:'奶凍捲、蔥燒餅、三星蔥麵包，離車站 5 分鐘。',q:'奕順軒 宜蘭店'},
+    {slot:'晚餐',time:'16:45',name:'甕窯雞 礁溪總店',addr:'礁溪鄉礁溪路七段7之7號',hours:'假日 09:00–22:00',
+     desc:'整隻約 700 元左右加幾道炒菜，4–6 人一隻剛好，一人 300 元內。',q:'甕窯雞 礁溪總店'}
+  ]
 };
 
-const state = {day:1, open:new Set(['a1']), done:new Set()};
+const MEMO = {
+  before:['訂好週日北返火車票（19:30 之後宜蘭→台北的班次）','租車確認：10:00 取車、19:50 前還車、是否要滿油還車','跟民宿確認入住／退房時間、鑰匙領取方式','打 03-997-2222 預約空氣島週六 17:00 場，人多問團體票','出發前一天看氣象：9 月仍有颱風和午後雷陣雨'],
+  pack:['現金（蔥油餅、夜市、南方澳小吃）','運動服＋襪子（空氣島）','拖鞋、換洗衣物（外澳、內埤踏浪）','防曬、帽子、水壺','防蚊液','行動電源','雨具','桌遊、藍牙喇叭（民宿 Party）'],
+  rain:['外澳沙灘 → 蘭陽博物館多待一點，九號咖啡看海看雨','內埤海灘 → 計程車博物館','冬山河生態綠舟 → 跳過，直接到宜蘭市逛街喝咖啡','空氣島是室內，照常']
+};
+
+const state = {day:1, lastDay:1, open:new Set(['a1']), done:new Set()};
 const gmaps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
-const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function stopHTML(s){
   const cls = ['stop', s.opt?'opt':'', state.open.has(s.key)?'open':'', state.done.has(s.key)?'done':''].join(' ');
@@ -241,7 +317,7 @@ function stopHTML(s){
   const leg = s.leg ? `<li class="stop"><div class="leg" style="grid-column:3">${esc(s.leg)}</div></li>` : '';
   return `<li class="${cls}" data-key="${s.key}">
     <div class="t">${s.time}</div>
-    <div class="num">${s.pin==='nfa'?'+':s.pin}</div>
+    <div class="num">${s.opt?'+':s.pin}</div>
     <div class="card">
       <button class="head" type="button" aria-expanded="${state.open.has(s.key)}">
         <span class="name">${esc(s.name)}<small>${esc(s.sub)}</small></span>
@@ -258,13 +334,27 @@ function stopHTML(s){
     </div>
   </li>${leg}`;
 }
+function mealHTML(m){
+  return `<li class="meal${m.alt?' alt':''}">
+    <div class="slot"><b>${esc(m.slot)}</b>${m.time?esc(m.time):''}</div>
+    <div>
+      <h3>${esc(m.name)}</h3>
+      <div class="sub">${esc(m.addr)}<br>${esc(m.hours)}</div>
+      <p>${esc(m.desc)}</p>
+      <a class="btn" href="${gmaps(m.q)}" target="_blank" rel="noopener">Google 地圖導航</a>
+    </div>
+  </li>`;
+}
 
 function renderDay(d){
   document.getElementById('tl-'+d).innerHTML = STOPS.filter(s => s.day===d).map(stopHTML).join('');
 }
+function renderMeals(){
+  for (const d of [1,2]) document.getElementById('meals-'+d).innerHTML = MEALS[d].map(mealHTML).join('');
+}
 function renderMemo(){
   for (const k in MEMO){
-    document.getElementById('memo-'+k).innerHTML = MEMO[k].map((t,i) =>
+    document.getElementById('memo-'+k).innerHTML = MEMO[k].map(t =>
       `<li><label><input type="checkbox"><span>${esc(t)}</span></label></li>`).join('');
   }
 }
@@ -273,14 +363,14 @@ function syncPins(){
     const id = p.dataset.pin;
     const mine = STOPS.filter(s => String(s.pin)===id);
     p.classList.toggle('done', mine.length>0 && mine.every(s => state.done.has(s.key)));
-    p.classList.toggle('sel', mine.some(s => state.open.has(s.key) && s.day===state.day));
+    p.classList.toggle('sel', mine.some(s => state.open.has(s.key) && s.day===state.lastDay));
   });
-  document.getElementById('r1').classList.toggle('on', state.day===1);
-  document.getElementById('r2').classList.toggle('on', state.day===2);
-  document.getElementById('r2alt').classList.toggle('on', state.day===2);
+  document.getElementById('r1').classList.toggle('on', state.lastDay===1);
+  document.getElementById('r2').classList.toggle('on', state.lastDay===2);
 }
 function selectDay(d){
   state.day = d;
+  if (d===1 || d===2) state.lastDay = d;
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.day===String(d))));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id==='panel-'+d));
   syncPins();
@@ -297,7 +387,8 @@ function toggleStop(key, force){
 /* events */
 document.querySelector('.tabs').addEventListener('click', e => {
   const t = e.target.closest('.tab'); if (!t) return;
-  selectDay(t.dataset.day==='m' ? 'm' : Number(t.dataset.day));
+  const v = t.dataset.day;
+  selectDay(v==='1'||v==='2' ? Number(v) : v);
 });
 document.querySelectorAll('.tl').forEach(tl => {
   tl.addEventListener('click', e => {
@@ -315,11 +406,11 @@ document.querySelectorAll('.pin').forEach(p => {
   const go = () => {
     const id = p.dataset.pin;
     const mine = STOPS.filter(s => String(s.pin)===id);
-    const s = mine.find(x => x.day===state.day) || mine[0]; if (!s) return;
+    const s = mine.find(x => x.day===state.lastDay) || mine[0]; if (!s) return;
     if (state.day!==s.day) selectDay(s.day);
     toggleStop(s.key, true);
     const li = document.querySelector(`.stop[data-key="${s.key}"]`);
-    li && li.scrollIntoView({behavior:'smooth', block:'center'});
+    if (li && li.scrollIntoView) li.scrollIntoView({behavior:'smooth', block:'center'});
   };
   p.addEventListener('click', go);
   p.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); go(); } });
@@ -352,7 +443,7 @@ function markNow(){
   if (li){ li.classList.add('now'); }
 }
 
-renderDay(1); renderDay(2); renderMemo(); selectDay(1); markNow();
+renderDay(1); renderDay(2); renderMeals(); renderMemo(); selectDay(1); markNow();
 </script>
 </body>
 </html>
