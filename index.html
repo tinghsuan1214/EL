@@ -91,17 +91,24 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
 
 /* ---------- eats ---------- */
 .eats h2,.memo h2{font-family:var(--serif);font-size:17px;font-weight:600;margin:16px 4px 6px}
+.eats .intro{font-size:13px;color:var(--muted);margin:10px 4px 10px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 2px 12px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font:500 13px var(--sans);color:var(--muted);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:transparent}
+.chip:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.eats h2.cat{display:flex;align-items:baseline;gap:8px}
+.eats h2.cat span{font-family:var(--sans);font-size:12px;font-weight:400;color:var(--muted)}
 .meals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.meal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:56px 1fr;gap:10px}
-.meal.alt{border-style:dashed;background:transparent}
-.meal .slot{font-size:12px;color:var(--muted);line-height:1.4;padding-top:2px}
-.meal .slot b{display:block;color:var(--ink);font-size:13px;font-weight:700}
-.meal h3{font-family:var(--serif);font-size:16px;font-weight:600;margin:0 0 2px;line-height:1.3}
-.meal .sub{font-size:12px;color:var(--muted);line-height:1.5}
+.meal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.meal .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.meal h3{font-family:var(--serif);font-size:16px;font-weight:600;margin:0;line-height:1.3}
+.meal .tag{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+.meal .price{font-size:12px;color:var(--sun);font-weight:700;margin-left:auto}
+.meal .sub{font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px}
 .meal p{margin:6px 0 8px;font-size:14px}
 .eats .btn{border-color:var(--ink);color:var(--ink)}
-.eats p.note{font-size:13px;color:var(--muted);margin:8px 6px 0}
-
+.eats p.note{font-size:13px;color:var(--muted);margin:16px 6px 0}
+.eats .empty{font-size:14px;color:var(--muted);padding:20px 6px}
 /* ---------- memo ---------- */
 .memo ul{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .memo li{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
@@ -192,9 +199,10 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)
   <ol class="tl" id="tl-2"></ol>
 </section>
 <section class="panel eats" id="panel-e" role="tabpanel">
-  <h2>週六</h2><ul class="meals" id="meals-1"></ul>
-  <h2>週日</h2><ul class="meals" id="meals-2"></ul>
-  <p class="note">價格是網路整理的大概數字。虛線框是可選或二選一。</p>
+  <p class="intro">口袋名單，不照三餐排。找不到吃的、排隊太久、店休的時候翻這裡。</p>
+  <div class="filters" id="areaFilters"></div>
+  <div id="eatsList"></div>
+  <p class="note">價格是網路整理的大概數字，營業時間出發前再確認。</p>
 </section>
 <section class="panel memo" id="panel-m" role="tabpanel">
   <h2>出發前</h2><ul id="memo-before"></ul>
@@ -228,14 +236,14 @@ const STOPS = [
   {key:'a6',day:1,pin:6,time:'16:30',name:'空氣島彈跳工廠',sub:'蘇澳・室內放電 2 小時',addr:'蘇澳鎮港區路8號',hours:'10:00–20:00',q:'空氣島彈跳工廠',
    tips:['2 小時票約 350 元／人，一票玩到底，含自助吧（油飯、米粉湯、涼麵、冰淇淋、飲料吃到飽），先當晚餐前菜。','彈跳床、魔鬼滑梯、泡泡足球、空氣碰碰車、水彈槍、40 多台免投幣遊戲機。','假日建議先電話預約 03-997-2222，10 人以上可以問團體票。','穿運動服、帶襪子，進場要簽安全同意書；一進場先到 2 樓拿水彈槍預約券。'],
    leg:'開車約 5 分'},
-  {key:'a7',day:1,pin:7,time:'18:30',name:'蘇澳民宿 Check-in',sub:'1829 壹捌貳玖・包棟',addr:'蘇澳鎮福德路（正確地址以訂單為準）',hours:'',q:'宜蘭縣蘇澳鎮福德路',
-   tips:['分房、放行李、沖個澡再出門。','出發前跟房東確認鑰匙或密碼的取得方式。','22:00 後蘇澳附近店都關了，宵夜、啤酒在羅東買齊再回來。'],
+  {key:'a7',day:1,pin:7,time:'18:30',name:'蘇澳民宿 Check-in',sub:'1829 壹捌貳玖・包棟',addr:'蘇澳鎮龍德里福德路182巷9號',hours:'',q:'270宜蘭縣蘇澳鎮龍德里福德路182巷9號',
+   tips:['分房、放行李、沖個澡再出門。','導航直接搜「270宜蘭縣蘇澳鎮龍德里福德路182巷9號」；巷子小，跟著導航開到底。','出發前跟房東確認鑰匙或密碼的取得方式。','22:00 後蘇澳附近店都關了，宵夜、啤酒在羅東買齊再回來。'],
    leg:'開車約 25 分・往羅東'},
   {key:'a8',day:1,pin:8,time:'19:00',name:'羅東觀光夜市',sub:'晚餐・狂歡',addr:'羅東鎮興東路與民權路口（中山公園旁）',hours:'15:00–24:00',q:'羅東觀光夜市',
    tips:['蘇澳過去約 25 分，實際 19:30 左右到，剛好晚餐時間。','當歸羊肉湯、蔥肉串、龍鳳腿、包心粉圓、卜肉、三星蔥餅，一人 200–300 元。','停中山公園地下停車場或周邊收費停車場，有位就停。','帶現金，部分攤位可 Line Pay。離開前把宵夜和飲料外帶好，回民宿 Party。'],
    leg:''},
 
-  {key:'b1',day:2,pin:7,time:'09:30',name:'自然醒＆民宿退房',sub:'蘇澳',addr:'蘇澳鎮福德路',hours:'',q:'宜蘭縣蘇澳鎮福德路',
+  {key:'b1',day:2,pin:7,time:'09:30',name:'自然醒＆民宿退房',sub:'蘇澳',addr:'蘇澳鎮龍德里福德路182巷9號',hours:'',q:'270宜蘭縣蘇澳鎮龍德里福德路182巷9號',
    tips:['早餐自理，或開 3 分鐘到正好鮮肉小籠包蘇澳店（太平路21號，08:00–15:30）。','退房前檢查充電線、盥洗用品、冰箱。'],
    leg:'開車約 15 分・蘇花公路上山'},
   {key:'b2',day:2,pin:9,time:'10:10',name:'南方澳觀景臺',sub:'蘇花公路・俯瞰漁港',addr:'蘇澳鎮蘇花公路（台9線）',hours:'全天',q:'南方澳觀景臺',
@@ -261,38 +269,75 @@ const STOPS = [
    leg:''}
 ];
 
-const MEALS = {
-  1:[
-    {slot:'午餐',time:'11:30',name:'甕窯雞 礁溪總店',addr:'礁溪鄉白雲村礁溪路七段7之7號',hours:'假日 09:00–22:00',url:LINK_WYJ,
-     desc:'整隻約 700 元左右加幾道炒菜，4–6 人一隻剛好，一人 300 元內。',q:'甕窯雞 礁溪總店'},
-    {slot:'點心',time:'13:00',name:'阿嬤蔥油餅',addr:'頭城鎮三和路18號',hours:'假日 08:00–18:00',
-     desc:'頭城老攤，外帶酥脆型蔥油餅，加蛋加辣最多人點。想吃礁溪柯氏就去程先外帶。',q:'阿嬤蔥油餅 頭城'},
-    {slot:'冰',time:'13:20',name:'阿宗芋冰城',addr:'頭城鎮青雲路三段267號',hours:'09:00–21:00',
-     desc:'古早味芋冰一球十幾元，去蘭陽博物館順路。',q:'阿宗芋冰城 頭城'},
-    {slot:'下午茶',time:'15:00',name:'九號咖啡外澳館',addr:'頭城鎮濱海路二段6號',hours:'09:00–17:20',alt:true,
-     desc:'可選。正對外澳沙灘的海景咖啡，一人一杯低消，價位中等。',q:'九號咖啡外澳館'},
-    {slot:'晚餐①',time:'16:30',name:'空氣島自助吧',addr:'門票內含',hours:'隨門票 2 小時',
-     desc:'油飯、米粉湯、麻辣鴨血、涼麵、冰淇淋、飲料吃到飽，玩累了就吃。',q:'空氣島彈跳工廠'},
-    {slot:'晚餐②',time:'19:00',name:'羅東觀光夜市',addr:'羅東鎮興東路與民權路口',hours:'15:00–24:00',
-     desc:'當歸羊肉湯、蔥肉串、龍鳳腿、包心粉圓、卜肉，一人 200–300 元。宵夜順便外帶。',q:'羅東觀光夜市'}
-  ],
-  2:[
-    {slot:'早餐',time:'09:30',name:'正好鮮肉小籠包 蘇澳店',addr:'蘇澳鎮太平路21號',hours:'08:00–15:30，週二休',alt:true,
-     desc:'可選。民宿開 3 分鐘，一籠約 100 元，配酸辣湯、豆漿。',q:'正好鮮肉小籠包 蘇澳店'},
-    {slot:'午餐',time:'12:30',name:'阿芬鮮魚湯',addr:'蘇澳鎮海邊路145號',hours:'10:00–19:00',
-     desc:'南方澳平價小吃，鮮魚湯、海產粥百元有找，一人 150–250 元。',q:'阿芬鮮魚湯 南方澳'},
-    {slot:'午餐',name:'富美活海鮮',addr:'蘇澳鎮海邊路111號',hours:'11:00–19:30，週三休',alt:true,
-     desc:'二選一。點菜熱炒型，人多想吃多樣選這間，一人 300–400 元。',q:'富美活海鮮 南方澳'},
-    {slot:'肉羹',time:'16:30',name:'北門蒜味肉羹',addr:'宜蘭市舊城北路127之1號',hours:'週日 09:00–18:00',
-     desc:'宜蘭代表小吃，蒜味濃、肉片嫩，加醋加辣，一碗幾十元。18:00 就關，要吃得在買伴手禮這段先吃。',q:'北門蒜味肉羹 宜蘭'},
-    {slot:'伴手禮',time:'16:30',name:'奕順軒 宜蘭店',addr:'宜蘭市神農路二段17號',hours:'09:30–21:30',
-     desc:'奶凍捲、蔥燒餅、三星蔥麵包，離車站 5 分鐘。',q:'奕順軒 宜蘭店'},
-    {slot:'晚餐',time:'18:00',name:'東門觀光夜市',addr:'宜蘭市聖後街',hours:'傍晚起，以現場為準',
-     desc:'車站走路 10 分，小吃選擇多，最後一餐選想吃的。',q:'東門觀光夜市 宜蘭'},
-    {slot:'沒開',name:'正好鮮肉小籠包 宜蘭店',addr:'宜蘭市泰山路25-1號',hours:'週日 10:00–15:00',alt:true,
-     desc:'週日晚上沒營業，18:00 吃不到；想吃只能週日中午前，但那時人在南方澳。',q:'正好鮮肉小籠包 宜蘭市'}
-  ]
-};
+const AREAS = ['礁溪・頭城','蘇澳・南方澳','羅東・冬山','宜蘭市'];
+const EATS = [
+ {cat:'海鮮・現撈', items:[
+  {n:'漁町小吃',a:'蘇澳・南方澳',ad:'蘇澳鎮鎮江夏路7號前',h:'11:00–18:00（週日公休）',p:'$',
+   d:'年輕主廚的小攤，三張桌子，椒鹽白帶魚、炸物很酥。網路評價 4.9，四道菜三人不到 300 元。週日不開，只有週六能去。',q:'漁町小吃 蘇澳'},
+  {n:'食令鮮魚湯店',a:'蘇澳・南方澳',ad:'蘇澳鎮蘇港路254號',h:'11:00–14:00、17:00–20:00（週二三休）',p:'$$',
+   d:'在地人推的家庭式海鮮，生魚片一份百來元，活鮑魚現烤。不接訂位，現場候位。',q:'食令鮮魚湯店 蘇澳'},
+  {n:'阿芬鮮魚湯',a:'蘇澳・南方澳',ad:'蘇澳鎮海邊路145號',h:'10:00–19:00',p:'$$',
+   d:'南方澳最好找的一間，鮮魚湯、海產粥、炸白帶魚，百元有找。觀光客多、翻桌快。',q:'阿芬鮮魚湯 南方澳'},
+  {n:'富美活海鮮',a:'蘇澳・南方澳',ad:'蘇澳鎮海邊路111號',h:'11:00–19:30（週三休）',p:'$$',
+   d:'點菜熱炒型，人多想吃多樣選這間，一人 300–400 元。',q:'富美活海鮮 南方澳'},
+  {n:'添喜海鮮小吃',a:'礁溪・頭城',ad:'礁溪鄉德陽路91號',h:'11:00–13:30、17:00–19:30（週一休）',p:'$$',
+   d:'礁溪市區的平價海鮮熱炒，蛤蜊和炒花枝評價高，七道菜四人約 1,500 元。中午只開到 13:30。',q:'添喜海鮮小吃 礁溪'}
+ ]},
+ {cat:'飯麵湯・銅板小吃', items:[
+  {n:'上品佑食堂',a:'羅東・冬山',ad:'羅東鎮復興路二段111號',h:'11:00–19:30（週四休）',p:'$',
+   d:'羅東 CP 值代表，招牌爆漿炸蛋魯肉飯、雞絲飯，配米苔目或客家湯圓。五百元能點很豐盛，有自己的停車位。',q:'上品佑食堂 羅東'},
+  {n:'礁溪老街小吃部',a:'礁溪・頭城',ad:'礁溪鄉中山路二段53號',h:'07:00–14:30、17:00–20:30（週三休）',p:'$',
+   d:'有冷氣、乾淨明亮的小吃店。陽春麵、滷味小菜自己夾，三碗麵兩份小菜約 280 元。',q:'礁溪老街小吃部'},
+  {n:'頭城魏家食府',a:'礁溪・頭城',ad:'頭城鎮鑽巷路38號',h:'11:00–13:45、16:30–19:45（週一休）',p:'$',
+   d:'頭城火車站附近的家常小館，蘿蔔糕和炒飯評價特別好，菜單有照片好點。',q:'頭城魏家食府'},
+  {n:'頭城老店蚵仔煎',a:'礁溪・頭城',ad:'頭城鎮鑽巷路33號',h:'15:30–22:30',p:'$',
+   d:'下午才開的宵夜場老攤，蚵仔煎、當歸鴨、乾麵、炒米粉。晚上從蘇澳回頭城不順路，適合白天最後一站。',q:'頭城老店蚵仔煎'},
+  {n:'玉仁八寶冬粉',a:'礁溪・頭城',ad:'礁溪鄉中山路二段131號',h:'06:00–21:00',p:'$',
+   d:'礁溪在地人的湯麵店，冬粉、小菜自取，一碗幾十元。開很長，蔥油餅排太久的備案。',q:'玉仁八寶冬粉 礁溪'},
+  {n:'蘇澳廟口米粉羹',a:'蘇澳・南方澳',ad:'蘇澳鎮中原路6號',h:'07:30–15:30（週三休）',p:'$',
+   d:'七、八十年老店，鹹的只有米粉羹，甜的有花生湯配油條、八寶粥，一人不到 100 元。離民宿 10 分鐘，早餐好選擇。',q:'蘇澳廟口米粉羹'},
+  {n:'文昌炸醬麵',a:'宜蘭市',ad:'宜蘭市文昌路37號',h:'06:00–14:00（週二休）',p:'$',
+   d:'排隊老店，炸醬麵配餛飩湯，份量大又便宜。只做早午餐，下午就收。',q:'文昌炸醬麵 宜蘭'},
+  {n:'李家老店',a:'宜蘭市',ad:'宜蘭市南興街20號',h:'依店家公告',p:'$',
+   d:'市場邊的懷舊攤，肉羹、魚丸米粉、滷肉飯。宜蘭魚丸偏軟，湯頭濃。半戶外沒冷氣。',q:'李家老店 宜蘭市南興街'},
+  {n:'大麵章',a:'宜蘭市',ad:'宜蘭市新民路24號',h:'15:30–24:00（週日、週一休）',p:'$',
+   d:'1963 年開到現在的麻醬麵和餛飩湯，車站附近的宵夜首選。週日公休，只有週六去得了。',q:'大麵章 宜蘭市'}
+ ]},
+ {cat:'蔥油餅・排隊小點', items:[
+  {n:'柯氏蔥油餅',a:'礁溪・頭城',ad:'礁溪鄉礁溪路四段128號',h:'09:00–18:00（週三休）',p:'$',
+   d:'炸蛋蔥油餅 45 元、加蛋 50 元，三種醬報號碼。假日排 10–30 分。',q:'柯氏蔥油餅 礁溪'},
+  {n:'阿嬤蔥油餅',a:'礁溪・頭城',ad:'頭城鎮三和路18號',h:'假日 08:00–18:00',p:'$',
+   d:'頭城老攤，只有外帶，酥脆不油膩，加蛋加辣最多人點。沒座位，車上吃或站著吃。',q:'阿嬤蔥油餅 頭城'},
+  {n:'羅東夜市必吃',a:'羅東・冬山',ad:'羅東鎮興東路與民權路口',h:'15:00–24:00',p:'$',
+   d:'阿灶伯當歸羊肉湯、包心粉圓、龍鳳腿、卜肉、三星蔥餅，宵夜場推冷滷味「秘醬滷味」，外帶回民宿剛好。',q:'羅東觀光夜市'},
+  {n:'東門觀光夜市',a:'宜蘭市',ad:'宜蘭市聖後街',h:'傍晚起',p:'$',
+   d:'離宜蘭車站走路 10 分，最後一餐或還車前補一輪的地方。',q:'東門觀光夜市 宜蘭'}
+ ]},
+ {cat:'冰品・豆花・甜湯', items:[
+  {n:'聯發冰工坊',a:'礁溪・頭城',ad:'頭城鎮青雲路三段190號',h:'10:30–21:00（週三休）',p:'$',
+   d:'一球 20 元，芝麻桑葚、洛神、龍眼、紅棗等少見口味，不會太甜。跟阿宗芋冰城同一條路，兩間可以都吃。',q:'聯發冰工坊 頭城'},
+  {n:'阿宗芋冰城',a:'礁溪・頭城',ad:'頭城鎮青雲路三段267號',h:'09:00–21:00',p:'$',
+   d:'頭城老字號古早味芋冰、花生冰，一球十幾元。',q:'阿宗芋冰城 頭城'},
+  {n:'原來豆花 宜蘭店',a:'宜蘭市',ad:'宜蘭市舊城北路171-2號',h:'10:00–20:30（週三休）',p:'$',
+   d:'傳統豆花配三種料只要 50 元，份量很大。離北門蒜味肉羹走路 3 分，吃完肉羹續攤剛好。',q:'原來豆花 宜蘭店'},
+  {n:'白水豆花 礁溪溫泉店',a:'礁溪・頭城',ad:'礁溪鄉仁愛路23號',h:'12:00–20:00（週三、週四休）',p:'$$',
+   d:'網紅名店，花生糖刨在豆花上是招牌。座位不到十個、只收現金、要排隊，趕時間別去。',q:'白水豆花 礁溪'},
+  {n:'和平豆花',a:'羅東・冬山',ad:'羅東鎮中山路三段109號',h:'依店家公告',p:'$',
+   d:'羅東老店，古早味焦香豆花，夜市吃太鹹之後的解膩選擇。',q:'和平豆花 羅東'},
+  {n:'羅東紅豆湯圓',a:'羅東・冬山',ad:'羅東鎮中山路三段180號',h:'依店家公告',p:'$',
+   d:'開四十多年的老店，紅豆湯圓、燒仙草。跟和平豆花在同一條街，兩間隔壁。',q:'羅東紅豆湯圓'}
+ ]},
+ {cat:'坐下來吃一頓', items:[
+  {n:'侯嗎紀專業牛排',a:'羅東・冬山',ad:'冬山鄉東山路一段743號',h:'週末 11:00–21:30',p:'$$',
+   d:'平價牛排店，評價 4.7、五千則評論。假日中午到晚上不休息，時間卡不上正餐時段時很好用。',q:'侯嗎紀專業牛排 冬山'},
+  {n:'Zuan Vu Ka 牛排酒館',a:'羅東・冬山',ad:'冬山鄉義成路三段331號',h:'11:30–14:30、17:30–21:30（週三四休）',p:'$$',
+   d:'538 元的套餐含五道小菜和飲料，夫妻經營、份量足。人少想好好吃一頓選這間。',q:'Zuan Vu Ka Steak Bar 冬山'},
+  {n:'甕窯雞 礁溪總店',a:'礁溪・頭城',ad:'礁溪鄉礁溪路七段7之7號',h:'假日 09:00–22:00',p:'$$',url:LINK_WYJ,
+   d:'整隻約 700 元，配鍋巴飯、炒山蘇，4–6 人剛好。開到 22:00，晚回宜蘭也吃得到。',q:'甕窯雞 礁溪總店'},
+  {n:'九號咖啡外澳館',a:'礁溪・頭城',ad:'頭城鎮濱海路二段6號',h:'09:00–17:20',p:'$$',
+   d:'正對外澳沙灘的海景咖啡，有正餐和甜點。下雨天看海的地方。',q:'九號咖啡外澳館'}
+ ]}
+];
 
 const MEMO = {
   before:['訂好週日北返火車票（20:00 之後宜蘭→台北的班次）','租車確認：11:00 取車、19:50 還車、是否要滿油還車','跟民宿確認入住／退房時間、鑰匙領取方式','打 03-997-2222 預約空氣島週六 16:30 場，人多問團體票','出發前一天看氣象：9 月仍有颱風和午後雷陣雨'],
@@ -300,7 +345,7 @@ const MEMO = {
   rain:['外澳沙灘 → 蘭陽博物館多待一點，或九號咖啡看海看雨','內埤海灘、觀景臺 → 計程車博物館（蘇澳鎮中山路二段162巷2號，10:00–17:00，門票 200 元）','冬山河生態綠舟 → 跳過，提早到宜蘭市逛街喝咖啡','空氣島是室內，照常']
 };
 
-const state = {day:1, lastDay:1, open:new Set(['a1']), done:new Set()};
+const state = {day:1, lastDay:1, area:'全部', open:new Set(['a1']), done:new Set()};
 const gmaps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
 const linkOf = x => x.url || gmaps(x.q);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -333,22 +378,33 @@ function stopHTML(s){
   </li>${leg}`;
 }
 function mealHTML(m){
-  return `<li class="meal${m.alt?' alt':''}">
-    <div class="slot"><b>${esc(m.slot)}</b>${m.time?esc(m.time):''}</div>
-    <div>
-      <h3>${esc(m.name)}</h3>
-      <div class="sub">${esc(m.addr)}<br>${esc(m.hours)}</div>
-      <p>${esc(m.desc)}</p>
-      <a class="btn" href="${esc(linkOf(m))}" target="_blank" rel="noopener">Google 地圖導航</a>
+  return `<li class="meal">
+    <div class="top">
+      <h3>${esc(m.n)}</h3>
+      <span class="tag">${esc(m.a)}</span>
+      <span class="price">${esc(m.p)}</span>
     </div>
+    <div class="sub">${esc(m.ad)}<br>${esc(m.h)}</div>
+    <p>${esc(m.d)}</p>
+    <a class="btn" href="${esc(m.url || gmaps(m.q))}" target="_blank" rel="noopener">Google 地圖導航</a>
   </li>`;
 }
-
 function renderDay(d){
   document.getElementById('tl-'+d).innerHTML = STOPS.filter(s => s.day===d).map(stopHTML).join('');
 }
 function renderMeals(){
-  for (const d of [1,2]) document.getElementById('meals-'+d).innerHTML = MEALS[d].map(mealHTML).join('');
+  const area = state.area;
+  const html = EATS.map(g => {
+    const items = g.items.filter(i => area==='全部' || i.a===area);
+    if (!items.length) return '';
+    return `<h2 class="cat">${esc(g.cat)}<span>${items.length} 間</span></h2><ul class="meals">${items.map(mealHTML).join('')}</ul>`;
+  }).join('');
+  document.getElementById('eatsList').innerHTML = html || '<p class="empty">這個區域還沒有名單，換一個看看。</p>';
+}
+function renderFilters(){
+  const all = ['全部', ...AREAS];
+  document.getElementById('areaFilters').innerHTML = all.map(a =>
+    `<button class="chip" type="button" data-area="${esc(a)}" aria-pressed="${a===state.area}">${esc(a)}</button>`).join('');
 }
 function renderMemo(){
   for (const k in MEMO){
@@ -420,6 +476,11 @@ document.getElementById('mapToggle').addEventListener('click', e => {
   e.currentTarget.textContent = hide ? '展開地圖' : '收合地圖';
   e.currentTarget.setAttribute('aria-expanded', String(!hide));
 });
+document.getElementById('areaFilters').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  state.area = c.dataset.area;
+  renderFilters(); renderMeals();
+});
 document.querySelector('.memo').addEventListener('change', e => {
   const li = e.target.closest('li'); if (li) li.classList.toggle('on', e.target.checked);
 });
@@ -441,7 +502,7 @@ function markNow(){
   if (li){ li.classList.add('now'); }
 }
 
-renderDay(1); renderDay(2); renderMeals(); renderMemo(); selectDay(1); markNow();
+renderDay(1); renderDay(2); renderFilters(); renderMeals(); renderMemo(); selectDay(1); markNow();
 </script>
 </body>
 </html>
